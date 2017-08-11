@@ -1,0 +1,23 @@
+{
+  "name": "tronplex",
+  "version": "1.0.0",
+  "description": "A electron based plexweb client for windows",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/mjefferys/tronplex",
+  "keywords": [
+    "Electron",
+    "plexweb",
+    "plex"
+  ],
+  "author": "Michael Jefferys",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "~1.6.2"
+  },
+  "dependencies": {    
+    "electron-titlebar-windows": "^3.0.0"   
+  }
+}

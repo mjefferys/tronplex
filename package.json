@@ -4,7 +4,9 @@
   "description": "A electron based plexweb client for windows",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+        "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/mjefferys/tronplex",
   "keywords": [
@@ -25,9 +27,5 @@
     "mac": {
       "category": "n/a"
     }
-  },
-  "scripts": {
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
   }
 }

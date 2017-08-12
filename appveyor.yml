@@ -16,9 +16,10 @@ install:
   - ps: Install-Product node 6 x64
   - git reset --hard HEAD
   - npm install npm -g
-  - npm install electron-builder@next # force install next version to test electron-builder
+  - npm install electron-builder
   - npm install
   - npm prune
+  - npm version %APPVEYOR_BUILD_VERSION% -m 'v%APPVEYOR_BUILD_VERSION%'
 
 build_script:
   - node --version

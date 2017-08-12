@@ -17,7 +17,8 @@
   "author": "Michael Jefferys",
   "license": "MIT",
   "devDependencies": {
-    "electron": "~1.6.2"
+    "electron": "~1.6.2",
+    "electron-builder": "^19.20.1"
   },
   "dependencies": {
     "electron-titlebar-windows": "^3.0.0"

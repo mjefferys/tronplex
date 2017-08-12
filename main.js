@@ -44,7 +44,6 @@ function createUpdateWindow() {
     win = null;
   });
   win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
-  win.isVisible = false;
   return win;
 }
 

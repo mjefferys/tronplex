@@ -1,18 +1,19 @@
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const path = require('path')
-const url = require('url')
-
+const electron = require('electron');
 const { Menu, protocol, ipcMain } = require('electron');
-const autoUpdater = require("electron-updater").autoUpdater
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const path = require('path');
+const url = require('url');
+const autoUpdater = require("electron-updater").autoUpdater;
 const log = require('electron-log');
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
+let mainWindow
+let win;
+
 log.info('App starting...');
 
-let mainWindow
-function createWindow() {
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     frame: false,
     width: 1024,
@@ -24,7 +25,6 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
-  // Emitted when the window is closed.
   mainWindow.on('closed', function () {
     mainWindow = null;
     // because we have more than one window, quit the app when the main one is shut
@@ -32,16 +32,10 @@ function createWindow() {
   })
 }
 
-let win;
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
-}
 function createUpdateWindow() {
   win = new BrowserWindow({
     show: false
   });
-  //win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });
@@ -49,22 +43,10 @@ function createUpdateWindow() {
   return win;
 }
 
-app.on('ready', function () {
-  createWindow();
-  autoUpdater.checkForUpdates();
-  createUpdateWindow();
-});
-
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
-app.on('activate', function () {
-  if (mainWindow === null) {
-    createWindow()
-  }
-})
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+}
 
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
@@ -102,8 +84,25 @@ autoUpdater.on('update-downloaded', (info) => {
       autoUpdater.quitAndInstall();
     }
     else {
-      sendStatusToWindow("Chose not to update");
+      sendStatusToWindow("Chose not to update, will automatically update on next restart");
       win.hide();
     }
   }
-})
+});
+
+app.on('ready', function () {
+  createMainWindow();
+  autoUpdater.checkForUpdates();
+  createUpdateWindow();
+});
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
+});
+app.on('activate', function () {
+  if (mainWindow === null) {
+    createMainWindow();
+  }
+});

@@ -19,7 +19,7 @@ install:
   - npm install electron-builder
   - npm install
   - npm prune
-  - npm version %APPVEYOR_BUILD_VERSION% -m 'v%APPVEYOR_BUILD_VERSION%'
+  - npm version --force %APPVEYOR_BUILD_VERSION% -m 'v%APPVEYOR_BUILD_VERSION%'
 
 build_script:
   - node --version

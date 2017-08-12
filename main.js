@@ -50,8 +50,8 @@ function createUpdateWindow() {
 }
 
 app.on('ready', function () {
-  autoUpdater.checkForUpdates();
   createWindow();
+  autoUpdater.checkForUpdates();
   createUpdateWindow();
 });
 
@@ -101,7 +101,7 @@ function doUpdate(result) {
     sendStatusToWindow("Updating");
     autoUpdater.quitAndInstall();
   }
-  else{
+  else {
     sendStatusToWindow("Chose not to update");
   }
 }

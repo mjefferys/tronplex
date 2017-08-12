@@ -45,6 +45,8 @@
     </webview>
 </body>
 <script>
+    var appVersion = require('electron').remote.app.getVersion();
+    alert(appVersion);
     require('./renderer.js')
     const electronTitlebarWindows = require('electron-titlebar-windows');
     const { remote } = require('electron');

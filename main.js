@@ -30,9 +30,28 @@ function createWindow() {
   })
 }
 
+let win;
+function sendStatusToWindow(text) {
+  log.info(text);
+  win.webContents.send('message', text);
+}
+function createUpdateWindow() {
+  win = new BrowserWindow({
+    show: false
+  });
+  win.webContents.openDevTools();
+  win.on('closed', () => {
+    win = null;
+  });
+  win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
+  win.isVisible = false;
+  return win;
+}
+
 app.on('ready', function()  {
   autoUpdater.checkForUpdates();
   createWindow();
+  createUpdateWindow();
 });
 
 app.on('window-all-closed', function () {
@@ -46,25 +65,13 @@ app.on('activate', function () {
   }
 })
 
-let win;
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.send('message', text);
-}
-function createUpdateWindow() {
-  win = new BrowserWindow();
-  win.webContents.openDevTools();
-  win.on('closed', () => {
-    win = null;
-  });
-  win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
-  return win;
-}
+
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {  
-  createUpdateWindow();
+  sendStatusToWindow('Update available creating window.');
+  win.show();
   sendStatusToWindow('Update available.');
 })
 autoUpdater.on('update-not-available', (info) => {

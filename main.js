@@ -26,7 +26,9 @@ function createWindow() {
   }))
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    mainWindow = null
+    mainWindow = null;
+    // because we have more than one window, quit the app when the main one is shut
+    app.quit();
   })
 }
 
@@ -64,7 +66,6 @@ app.on('activate', function () {
   }
 })
 
-
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
 })
@@ -92,8 +93,15 @@ autoUpdater.on('update-downloaded', (info) => {
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  win.webContents.executeJavaScript("checkInstall();");
-  setTimeout(function () {
-    autoUpdater.quitAndInstall();
-  }, 5000)
+  win.webContents.executeJavaScript("checkInstall();", false, doUpdate(result));
 })
+
+function doUpdate(result) {
+  if (result) {
+    sendStatusToWindow("Updating");
+    autoUpdater.quitAndInstall();
+  }
+  else{
+    sendStatusToWindow("Chose not to update");
+  }
+}

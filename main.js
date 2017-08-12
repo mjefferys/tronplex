@@ -39,7 +39,7 @@ function createUpdateWindow() {
   win = new BrowserWindow({
     show: false
   });
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools();
   win.on('closed', () => {
     win = null;
   });

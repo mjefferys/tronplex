@@ -7,5 +7,8 @@ document.addEventListener("keydown", function (e) {
         require('remote').getCurrentWindow().openDevTools();
     } else if (e.which === 116) {
         location.reload();
+    } else if (e.which === 112) {
+        var appVersion = require('electron').remote.app.getVersion();
+        alert('Version: ' + appVersion);
     }
 });

@@ -17,7 +17,17 @@
   "devDependencies": {
     "electron": "~1.6.2"
   },
-  "dependencies": {    
-    "electron-titlebar-windows": "^3.0.0"   
+  "dependencies": {
+    "electron-titlebar-windows": "^3.0.0"
+  },
+  "build": {
+    "appId": "com.tronplex.app",
+    "mac": {
+      "category": "n/a"
+    }
+  },
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   }
 }

@@ -86,12 +86,9 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded; Prompting to install');
+  sendStatusToWindow('Update downloaded; Prompting to install.');
 });
 autoUpdater.on('update-downloaded', (info) => {
-  // Wait 5 seconds, then quit and install
-  // In your application, you don't need to wait 5 seconds.
-  // You could call autoUpdater.quitAndInstall(); immediately
   win.webContents.executeJavaScript('checkInstall();', true)
     .then((result) => {
       console.log(result);

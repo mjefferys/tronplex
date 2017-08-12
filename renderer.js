@@ -11,6 +11,7 @@ document.addEventListener("keydown", function (e) {
         var appVersion = require('electron').remote.app.getVersion();
         alert('Version: ' + appVersion);
     } else if (e.which == 113){
-        
+        var appVersion = require('electron').remote.app.getVersion();
+        alert('Version: ' + appVersion);        
     }
 });

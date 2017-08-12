@@ -4,7 +4,7 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
-const {Menu, protocol, ipcMain} = require('electron');
+const { Menu, protocol, ipcMain } = require('electron');
 const autoUpdater = require("electron-updater").autoUpdater
 const log = require('electron-log');
 autoUpdater.logger = log;
@@ -47,7 +47,7 @@ function createUpdateWindow() {
   return win;
 }
 
-app.on('ready', function()  {
+app.on('ready', function () {
   autoUpdater.checkForUpdates();
   createWindow();
   createUpdateWindow();
@@ -68,7 +68,7 @@ app.on('activate', function () {
 autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
 })
-autoUpdater.on('update-available', (info) => {  
+autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('Update available creating window.');
   win.show();
   sendStatusToWindow('Update available.');
@@ -86,14 +86,14 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded; will install in 5 seconds');
+  sendStatusToWindow('Update downloaded; Promptint to install');
 });
 autoUpdater.on('update-downloaded', (info) => {
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  win.webContents.executeJavaScript("alert('Update donloaded press ok to apply');");
-  setTimeout(function() {
-    autoUpdater.quitAndInstall();  
+  win.webContents.executeJavaScript("checkInstall();");
+  setTimeout(function () {
+    autoUpdater.quitAndInstall();
   }, 5000)
 })

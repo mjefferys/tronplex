@@ -93,7 +93,7 @@ autoUpdater.on('update-downloaded', (info) => {
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  win.webContents.executeJavaScript("checkInstall();", false, doUpdate(result));
+  win.webContents.executeJavaScript("checkInstall();", false, doUpdate());
 })
 
 function doUpdate(result) {

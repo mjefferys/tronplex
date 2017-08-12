@@ -92,7 +92,7 @@ autoUpdater.on('update-downloaded', (info) => {
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  alert('Downloaded update, restarting in 5s');
+  mainWindow.webContents.executeJavaScript("alert('Update donloaded restarting to apply');");
   setTimeout(function() {
     autoUpdater.quitAndInstall();  
   }, 5000)

@@ -70,7 +70,6 @@ autoUpdater.on('checking-for-update', () => {
   sendStatusToWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('Update available creating window.');
   win.show();
   sendStatusToWindow('Update available.');
 })
@@ -87,21 +86,27 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('Update downloaded; Promptint to install');
+  sendStatusToWindow('Update downloaded; Prompting to install');
 });
 autoUpdater.on('update-downloaded', (info) => {
   // Wait 5 seconds, then quit and install
   // In your application, you don't need to wait 5 seconds.
   // You could call autoUpdater.quitAndInstall(); immediately
-  win.webContents.executeJavaScript("checkInstall();", false, doUpdate());
-})
+  win.webContents.executeJavaScript('checkInstall();', true)
+    .then((result) => {
+      console.log(result);
+      log.info(result);
+      doUpdate(result);
+    })
 
-function doUpdate(result) {
-  if (result) {
-    sendStatusToWindow("Updating");
-    autoUpdater.quitAndInstall();
+  function doUpdate(result) {
+    if (result) {
+      sendStatusToWindow("Updating");
+      autoUpdater.quitAndInstall();
+    }
+    else {
+      sendStatusToWindow("Chose not to update");
+      win.hide();
+    }
   }
-  else {
-    sendStatusToWindow("Chose not to update");
-  }
-}
+})

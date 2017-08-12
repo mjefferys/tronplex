@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <style type="text/css">
         .hidden {
             display: none;
         }
-
         /* styles for the webview when its fullscreen */
+
         .fullscreenwebview {
             display: inline-flex;
             position: fixed;
@@ -21,8 +22,8 @@
             overflow: hidden;
             z-index: 999999;
         }
-
         /* styles for the webview when its not fullscreen */
+
         .partialwebview {
             display: inline-flex;
             position: fixed;
@@ -39,6 +40,7 @@
     </style>
     <title>Plex</title>
 </head>
+
 <body style="background: rgb(0, 0, 0); margin: 0; padding: 0;">
     <div id='menu'></div>
     <webview id="plexapp" src="https://app.plex.tv/web/app" autosize minwidth="576" minheight="432" class="partialwebview">
@@ -48,7 +50,7 @@
     require('./renderer.js')
     const electronTitlebarWindows = require('electron-titlebar-windows');
     const { remote } = require('electron');
-        let titlebar = new electronTitlebarWindows({
+    let titlebar = new electronTitlebarWindows({
         darkMode: true,
         color: 'rgb(220, 200, 200)',
         backgroundColor: 'rgb(0, 0, 0)',
@@ -84,5 +86,7 @@
         document.getElementById('menu').className = '';
         document.getElementById('plexapp').className = 'partialwebview'
     });
+
 </script>
+
 </html>

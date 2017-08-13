@@ -36,8 +36,11 @@ function createUpdateWindow() {
   win = new BrowserWindow({
     show: false
   });
-  win.on('closed', () => {
-    win = null;
+  win.on('close', (e) => {
+    e.preventDefault();
+    win.hide();
+    console.log('Window hidden');
+    return false;
   });
   win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
   return win;

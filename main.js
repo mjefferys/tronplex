@@ -9,7 +9,7 @@ const log = require('electron-log');
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 let mainWindow
-let win;
+let updateWindow;
 
 require('electron-context-menu')({
   prepend: (params) => [{
@@ -27,71 +27,72 @@ function createMainWindow() {
     width: 1024,
     height: 768,
     icon: path.join(__dirname, 'icon.png')
-  })
+  });
   mainWindow.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
     slashes: true
-  }))
+  }));
   mainWindow.on('closed', function () {
     mainWindow = null;
     // because we have more than one window, quit the app when the main one is shut
     app.quit();
-  })
+  });
+  return mainWindow;
 }
 
 function createUpdateWindow() {
-  win = new BrowserWindow({
-    show: false
+  updateWindow = new BrowserWindow({
+    show: false,
+    icon: path.join(__dirname, 'icon.png')
   });
-  win.on('close', (e) => {
-    // this is stopping the app from dieing completly, need a work around
+  updateWindow.on('close', (e) => {
     e.preventDefault();
-    win.hide();
+    updateWindow.hide();
     log.info('Window hidden');
     return false;
   });
-  win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
-  return win;
+  updateWindow.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
+  return updateWindow;
 }
 
 // Function to send statuses from the downloader to the updater window
-function sendStatusToWindow(text) {
+function sendStatusToUpdateWindow(text) {
   log.info(text);
-  win.webContents.send('message', text);
+  updateWindow.webContents.send('message', text);
 }
 
-function downloadProgress(percent) {
+function sednDownloadProgressToUpdateWindow(percent) {
   log.info(percent);
-  win.webContents.send('progress', percent);
+  updateWindow.webContents.send('progress', percent);
 }
 
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+  sendStatusToUpdateWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
-  win.show();
-  sendStatusToWindow('Update available. Downloading it!');
+  updateWindow.show();
+  sendStatusToUpdateWindow('Update available. Downloading it!');
 })
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('Update not available.');
+  sendStatusToUpdateWindow('Update not available.');
 })
 autoUpdater.on('error', (err) => {
-  sendStatusToWindow('Error in auto-updater. Please restart Tronplex. If this continues submit a bug.');
+  sendStatusToUpdateWindow('Error in auto-updater. Please restart Tronplex. If this continues submit a bug.');
 })
 autoUpdater.on('download-progress', (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  downloadProgress(progressObj.percent);
-  sendStatusToWindow(log_message);
+  sednDownloadProgressToUpdateWindow(progressObj.percent);
+  sendStatusToUpdateWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
-  downloadProgress(100);      
-  sendStatusToWindow('Update downloaded; Prompting to install.');
+  sednDownloadProgressToUpdateWindow(100);      
+  sendStatusToUpdateWindow('Update downloaded; Prompting to install.');
 });
 autoUpdater.on('update-downloaded', (info) => {
-  win.webContents.executeJavaScript('checkInstall();', true)
+  updateWindow.webContents.executeJavaScript('checkInstall();', true)
     .then((result) => {
       console.log(result);
       log.info(result);
@@ -100,12 +101,12 @@ autoUpdater.on('update-downloaded', (info) => {
 
   function doUpdate(result) {
     if (result) {
-      sendStatusToWindow("Updating");
+      sendStatusToUpdateWindow("Updating");
       autoUpdater.quitAndInstall();
     }
     else {
-      sendStatusToWindow("Chose not to update, will automatically update on next restart");
-      win.hide();
+      sendStatusToUpdateWindow("Chose not to update, will automatically update on next restart");
+      updateWindow.hide();
     }
   }
 });
@@ -114,8 +115,8 @@ app.on('ready', function () {
   createMainWindow();
   createUpdateWindow();
   autoUpdater.checkForUpdates();
-  //win.toggleDevTools();
-  //win.show();
+  //updateWindow.toggleDevTools();
+  updateWindow.show();
 });
 
 app.on('window-all-closed', function () {
@@ -126,8 +127,8 @@ app.on('window-all-closed', function () {
 
 app.on('before-quit', () => {
   // we need to allow the update window to close, so remove the listeners and set it as null;
-  win.removeAllListeners('close');
-  win = null
+  updateWindow.removeAllListeners('close');
+  updateWindow = null
 });
 
 app.on('activate', function () {

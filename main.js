@@ -116,7 +116,7 @@ app.on('ready', function () {
   createUpdateWindow();
   autoUpdater.checkForUpdates();
   //updateWindow.toggleDevTools();
-  updateWindow.show();
+  //updateWindow.show();
 });
 
 app.on('window-all-closed', function () {

@@ -110,8 +110,7 @@ autoUpdater.on('update-downloaded', (info) => {
 
 app.on('ready', function () {
   createMainWindow();
-  createUpdateWindow();
-  win.show();
+  createUpdateWindow();  
   autoUpdater.checkForUpdates();
   //win.toggleDevTools();
 });

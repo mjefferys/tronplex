@@ -48,13 +48,14 @@ function createUpdateWindow() {
     // this is stopping the app from dieing completly, need a work around
     e.preventDefault();
     win.hide();
-    console.log('Window hidden');
+    log.info('Window hidden');
     return false;
   });
   win.loadURL(`file://${__dirname}/version.html#v${app.getVersion()}`);
   return win;
 }
 
+// Function to send statuses from the downloader to the updater window
 function sendStatusToWindow(text) {
   log.info(text);
   win.webContents.send('message', text);
@@ -86,6 +87,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {
+  downloadProgress(100);      
   sendStatusToWindow('Update downloaded; Prompting to install.');
 });
 autoUpdater.on('update-downloaded', (info) => {
@@ -110,9 +112,10 @@ autoUpdater.on('update-downloaded', (info) => {
 
 app.on('ready', function () {
   createMainWindow();
-  createUpdateWindow();  
+  createUpdateWindow();
   autoUpdater.checkForUpdates();
   //win.toggleDevTools();
+  //win.show();
 });
 
 app.on('window-all-closed', function () {

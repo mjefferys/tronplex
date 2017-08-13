@@ -67,9 +67,10 @@
         // Listen for messages
         const { ipcRenderer } = require('electron');
         ipcRenderer.on('message', function (event, text) {
+            log.info(text);
             var container = document.getElementById('messages');
             var message = document.createElement('div');
-            message.innerHTML = text;
+            message.innerHTML = text;            
             container.appendChild(message);
         })
         ipcRenderer.on('progress', function (event, percentage) {
@@ -80,7 +81,6 @@
             log.info(percentage);
             $("#progress-bar").css("width", sPercentage);
             $("#progress-bar").attr("aria-valuenow", sPercentage);
-
         })
         function checkInstall() {
             var r = confirm("Would you like to install the update now?");

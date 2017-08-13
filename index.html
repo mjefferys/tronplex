@@ -48,6 +48,7 @@
 </body>
 <script>
     require('./renderer.js')
+    const log = require('electron-log');
     const electronTitlebarWindows = require('electron-titlebar-windows');
     const { remote } = require('electron');
     let titlebar = new electronTitlebarWindows({
@@ -73,16 +74,19 @@
     });
     titlebar.on('maximize', () => {
         console.info('maximize');
+        log.info('maximise');
         remote.getCurrentWindow().setFullScreen(false);
         remote.getCurrentWindow().maximize();
     });
 
     // Handle showing and hiding the menu on full-screen enter exit
     remote.getCurrentWindow().on('enter-full-screen', () => {
+        log.info('entering fullscreen');
         document.getElementById('menu').className = 'hidden';
         document.getElementById('plexapp').className = 'fullscreenwebview'
     });
     remote.getCurrentWindow().on('leave-full-screen', () => {
+        log.info('exiting fullscreen');
         document.getElementById('menu').className = '';
         document.getElementById('plexapp').className = 'partialwebview'
     });

@@ -82,7 +82,7 @@ autoUpdater.on('download-progress', (progressObj) => {
   let log_message = "Download speed: " + progressObj.bytesPerSecond;
   log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
   log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-  downloadProgress(progressObj.transferred);
+  downloadProgress(progressObj.percent);
   sendStatusToWindow(log_message);
 })
 autoUpdater.on('update-downloaded', (info) => {

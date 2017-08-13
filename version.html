@@ -60,6 +60,7 @@
     </script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
+        const log = require('electron-log');
         // Display the current version
         let version = window.location.hash.substring(1);
         document.getElementById('version').innerText = version;
@@ -75,6 +76,8 @@
             console.log(percentage);
             var sPercentage = percentage + '%';
             console.log(sPercentage);
+            log.info(sPercentage);
+            log.info(percentage);
             $("#progress-bar").css("width", sPercentage);
             $("#progress-bar").attr("aria-valuenow", sPercentage);
 

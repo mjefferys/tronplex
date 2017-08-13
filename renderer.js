@@ -12,6 +12,7 @@ document.addEventListener("keydown", function (e) {
         alert('Version: ' + appVersion);
     } else if (e.which == 113){
         var appVersion = require('electron').remote.app.getVersion();
-        alert('Version: ' + appVersion);        
+        alert('Version: ' + appVersion);    
+        //remote.getCurrentWindow().maximize();    
     }
 });

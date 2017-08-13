@@ -11,6 +11,14 @@ autoUpdater.logger.transports.file.level = 'info';
 let mainWindow
 let win;
 
+require('electron-context-menu')({
+	prepend: (params) => [{
+		label: 'Rainbow',
+		// Only show it when right-clicking images
+		//visible: params.mediaType === 'image'
+	}]
+});
+
 log.info('App starting...');
 
 function createMainWindow() {

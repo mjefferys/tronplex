@@ -23,6 +23,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "bootswatch": "^3.3.7",
+    "electron-context-menu": "^0.9.1",
     "electron-log": "^2.2.7",
     "electron-titlebar-windows": "^3.0.0",
     "electron-updater": "^2.8.7",

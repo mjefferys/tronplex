@@ -12,11 +12,11 @@ let mainWindow
 let win;
 
 require('electron-context-menu')({
-	prepend: (params) => [{
-		label: 'Rainbow',
-		// Only show it when right-clicking images
-		//visible: params.mediaType === 'image'
-	}]
+  prepend: (params) => [{
+    label: 'Rainbow',
+    // Only show it when right-clicking images
+    //visible: params.mediaType === 'image'
+  }]
 });
 
 log.info('App starting...');
@@ -45,6 +45,7 @@ function createUpdateWindow() {
     show: false
   });
   win.on('close', (e) => {
+    // this is stopping the app from dieing completly, need a work around
     e.preventDefault();
     win.hide();
     console.log('Window hidden');
@@ -59,7 +60,7 @@ function sendStatusToWindow(text) {
   win.webContents.send('message', text);
 }
 
-function downloadProgress(percent){
+function downloadProgress(percent) {
   log.info(percent);
   win.webContents.send('progress', percent);
 }
@@ -109,10 +110,10 @@ autoUpdater.on('update-downloaded', (info) => {
 
 app.on('ready', function () {
   createMainWindow();
-  autoUpdater.checkForUpdates();
   createUpdateWindow();
   win.show();
-  win.toggleDevTools();
+  autoUpdater.checkForUpdates();
+  //win.toggleDevTools();
 });
 
 app.on('window-all-closed', function () {
@@ -120,6 +121,13 @@ app.on('window-all-closed', function () {
     app.quit();
   }
 });
+
+app.on('before-quit', () => {
+  // we need to allow the update window to close, so remove the listeners and set it as null;
+  win.removeAllListeners('close');
+  win = null
+});
+
 app.on('activate', function () {
   if (mainWindow === null) {
     createMainWindow();

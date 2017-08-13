@@ -2,25 +2,63 @@
 <html>
 
 <head>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style type="text/css">
         .hidden {
             display: none;
         }
 
         body {
-            background: rgb(0, 0, 0);
             margin: 10px;
             padding: 10px;
-            color: rgb(244, 244, 244);
+            padding-top: 50px;
             font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .starter-template {
+            padding: 40px 15px;
+            text-align: center;
         }
     </style>
     <title>Plectron Updater</title>
 </head>
 
 <body>
-    Current version: <span id="version">vX.Y.Z</span>
-    <div id="messages"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <a class="navbar-brand" href="#">Plectron Updater</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="starter-template">
+            <h1>Plectron Updater</h1>
+            Current version: <span id="version">vX.Y.Z</span>
+            <div id="messages"></div>
+        </div>
+    </div>
+    <script>
+        window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.min');
+    </script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
         // Display the current version
         let version = window.location.hash.substring(1);
@@ -42,7 +80,6 @@
                 return false;
             }
         }
-
     </script>
 </body>
 

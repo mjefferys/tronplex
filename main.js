@@ -94,6 +94,8 @@ app.on('ready', function () {
   createMainWindow();
   autoUpdater.checkForUpdates();
   createUpdateWindow();
+  win.show();
+  win.toggleDevTools();
 });
 
 app.on('window-all-closed', function () {

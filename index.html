@@ -91,6 +91,20 @@
         document.getElementById('plexapp').className = 'partialwebview'
     });
 
+    const webview = document.querySelector('webview');
+    webview.addEventListener('page-title-updated', titleUpdate)
+    function titleUpdate() {
+        const webview = document.querySelector('webview');
+        var title = webview.getTitle();
+        if (title != "Plex") {            
+            title = title.split('▶').join('')
+            document.title = title + " - Plex";
+        }
+        else {
+            document.title = "Plex";
+        }
+    }
+
 </script>
 
 </html>

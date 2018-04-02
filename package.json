@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --publish always"
   },
   "repository": "https://github.com/mjefferys/tronplex",
   "keywords": [

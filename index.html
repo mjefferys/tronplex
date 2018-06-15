@@ -97,8 +97,6 @@
         const webview = document.querySelector('webview');
         var title = webview.getTitle();
         if (title != "Plex") {
-            // I thought the google app strips this but it doesn't? Not sure which I prefer yet, but i'll not strip it for now.
-            // title = title.split('▶').join('')
             document.title = title + " - Plex";
         }
         else {

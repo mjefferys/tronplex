@@ -5,7 +5,6 @@
 document.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
-    //var electrionVersion = 'hello';
     if (e.which === 123) {
         require('remote').getCurrentWindow().toggleDevTools();
     } else if (e.which === 116) {
@@ -20,6 +19,9 @@ document.addEventListener("keydown", function (e) {
         changeSpeed(1.5)
     } else if (e.which == 117){
         changeSpeed(2)
+    } else if (e.which == 121){
+        const webview = document.querySelector('webview');           
+        webview.loadURL("https://www.whatsmybrowser.org/");        
     }
 });
 
@@ -28,7 +30,6 @@ function changeSpeed(speed)
     console.log('Setting speed to: ' + speed)
     const webview = document.querySelector('webview');             
     var speedJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.playbackRate=" + speed + "; });"
-    //console.log(jacascript);
-    webview.executeJavaScript(speedJavaScript);
+    webview.executeJavaScript(speedJavaScript);    
     console.log('Speed to: ' + speed)
 }

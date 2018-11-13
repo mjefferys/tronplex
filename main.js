@@ -33,7 +33,10 @@ function createMainWindow() {
     protocol: 'file:',
     slashes: true
   }));
+  const ses = mainWindow.webContents.session;
+  log.info(ses.getUserAgent())
   mainWindow.on('closed', function () {
+    ses.flushStorageData();
     mainWindow = null;
     // because we have more than one window, quit the app when the main one is shut
     app.quit();
@@ -115,8 +118,6 @@ app.on('ready', function () {
   createMainWindow();
   createUpdateWindow();
   autoUpdater.checkForUpdates();
-  //updateWindow.toggleDevTools();
-  //updateWindow.show();
 });
 
 app.on('window-all-closed', function () {
@@ -128,7 +129,7 @@ app.on('window-all-closed', function () {
 app.on('before-quit', () => {
   // we need to allow the update window to close, so remove the listeners and set it as null;
   updateWindow.removeAllListeners('close');
-  updateWindow = null
+  updateWindow = null  
 });
 
 app.on('activate', function () {

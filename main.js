@@ -1,16 +1,19 @@
 const electron = require('electron');
 const { Menu, protocol, ipcMain } = require('electron');
+
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
 const autoUpdater = require("electron-updater").autoUpdater;
 const log = require('electron-log');
+const windowStateKeeper = require('electron-window-state');
+const defaultWindowWidth = 1024;
+const defaultWindowHeight = 768;
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 let mainWindow
 let updateWindow;
-
 require('electron-context-menu')({
   prepend: (params) => [{
     label: 'Rainbow',
@@ -18,14 +21,22 @@ require('electron-context-menu')({
     //visible: params.mediaType === 'image'
   }]
 });
-
 log.info('App starting...');
 
 function createMainWindow() {
+
+  // store the window state
+  let windowState = windowStateKeeper({
+    defaultWidth: defaultWindowWidth,
+    defaultHeight: defaultWindowHeight
+  });
+
   mainWindow = new BrowserWindow({
     frame: false,
-    width: 1024,
-    height: 768,
+    x: windowState.x,
+    y: windowState.y,
+    width: windowState.width,
+    height: windowState.height,
     icon: path.join(__dirname, 'icon.png')
   });
   mainWindow.loadURL(url.format({
@@ -41,6 +52,7 @@ function createMainWindow() {
     // because we have more than one window, quit the app when the main one is shut
     app.quit();
   });
+  windowState.manage(mainWindow);
   return mainWindow;
 }
 
@@ -115,6 +127,9 @@ autoUpdater.on('update-downloaded', (info) => {
 });
 
 app.on('ready', function () {
+
+
+  
   createMainWindow();
   createUpdateWindow();
   autoUpdater.checkForUpdates();

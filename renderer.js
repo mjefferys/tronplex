@@ -57,12 +57,11 @@ webview.addEventListener('did-fail-load', loadfail);
 function loadfail(){
     trackEvent("Application", "PlexLoadFail");
     indicator.innerHTML = 'Plex Load Failed, please press F5 to try again';    
+    trackScreenView("PlexFail");
 }
-
 function frameFinishLoad(){   
     trackEvent("Application", "PlexLoadFrame");
 }
-
 function loadstart() {
     trackEvent("Application", "PlexLoadStart");
 }
@@ -70,7 +69,6 @@ function loadstop() {
     trackEvent("Application", "PlexLoadEnd");
     trackScreenView("PlexApp");
 }
-
 function titleUpdate() {
     const webview = document.querySelector('webview');
     var title = webview.getTitle();
@@ -82,7 +80,6 @@ function titleUpdate() {
     }
     trackEvent("Application", "PlexTitleUpdate");
 }
-
 document.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
@@ -113,4 +110,5 @@ function changeSpeed(speed)
     var speedJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.playbackRate=" + speed + "; });"
     webview.executeJavaScript(speedJavaScript);    
     console.log('Speed to: ' + speed)
+    trackEvent("Application", "PlexSpeedChange");
 }

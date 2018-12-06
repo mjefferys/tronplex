@@ -9,7 +9,7 @@ nodeStorage.setItem('userid', userId);
 const usr = ua('UA-130548886-1', userId);
 usr.set("ds", "app")
 trackEvent('Application', 'Startup');
-trackScreenView('Application');
+trackScreenView('ApplicationStartup');
 
 function trackEvent(category, action, label, value) {
     usr

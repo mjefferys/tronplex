@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <style type="text/css">
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+
         .hidden {
             display: none;
         }
@@ -41,10 +42,9 @@
         .indicator {
             font-family: Open Sans Regular,Helvetica Neue,Helvetica,Arial,sans-serif;;
             color: #e5a00d;
-            font-size: 35px;
+            font-size: 25px;
             text-align: center;
-            vertical-align: middle;
-            line-height: 90px;  
+            vertical-align: middle;   
         }
     </style>
     <title>Plex</title>
@@ -52,15 +52,20 @@
 
 <body style="background: rgb(0, 0, 0); margin: 0; padding: 0;">
     <div id='menu'></div>
-    <div class="indicator">Loading Plex... 
+    <div class="indicator">
+        Loading Plex...         
         <br/>
-        If you don't see Plex in 10 seconds then please press F5 and report this issue to the developer</div>
+        <img src="loader.svg"></img>
+        <br/>
+        If you don't see Plex in a few seconds then please press F5 and report this issue to the developer</div>
     <webview id="plexapp" src="https://app.plex.tv/web/app" autosize minwidth="576" minheight="432" class="partialwebview"  partition="persist:tronplex">
     </webview>
 </body>
 <script>
     require('./renderer.js')
     const log = require('electron-log');
+    const { getGlobal } = require('electron').remote;
+    const trackEvent = getGlobal('trackEvent');
     const electronTitlebarWindows = require('electron-titlebar-windows');
     const { remote } = require('electron');
     let titlebar = new electronTitlebarWindows({
@@ -95,25 +100,27 @@
     remote.getCurrentWindow().on('enter-full-screen', () => {
         log.info('entering fullscreen');
         document.getElementById('menu').className = 'hidden';
-        document.getElementById('plexapp').className = 'fullscreenwebview'
+        document.getElementById('plexapp').className = 'fullscreenwebview';
+        trackEvent("Application", "FullScreenEnter");
     });
     remote.getCurrentWindow().on('leave-full-screen', () => {
         log.info('exiting fullscreen');
         document.getElementById('menu').className = '';
-        document.getElementById('plexapp').className = 'partialwebview'
+        document.getElementById('plexapp').className = 'partialwebview';
+        trackEvent("Application", "FullScreenExit");
     });
 
     const webview = document.querySelector('webview');
-    const indicator = document.querySelector('.indicator')
-    webview.addEventListener('page-title-updated', titleUpdate)
-    webview.addEventListener('did-start-loading', loadstart)
-    webview.addEventListener('did-stop-loading', loadstop)
+    const indicator = document.querySelector('.indicator');
+    webview.addEventListener('page-title-updated', titleUpdate);
+    webview.addEventListener('did-start-loading', loadstart);
+    webview.addEventListener('did-stop-loading', loadstop);
 
     function loadstart() {
-
+        trackEvent("Application", "PlexLoadStart");
     }
     function loadstop() {
-      indicator.className = 'hidden';
+        trackEvent("Application", "PlexLoadEnd");
     }
 
     function titleUpdate() {
@@ -125,6 +132,7 @@
         else {
             document.title = "Plex";
         }
+        trackEvent("Application", "PlexTitleUpdate");
     }
 
 </script>

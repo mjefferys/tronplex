@@ -3,15 +3,8 @@ const { Menu, protocol, ipcMain } = require('electron');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-const ua = require('universal-analytics');
-const uuid = require('uuid/v4');
-const { JSONStorage } = require('node-localstorage');
-const nodeStorage = new JSONStorage('./ls');
-const userId = nodeStorage.getItem('userid') || uuid();
-nodeStorage.setItem('userid', userId);
-const usr = ua('UA-130548886-1', userId);
-usr.set("ds", "app")
-trackEvent('Application', 'Startup');
+const { trackEvent } = require('./analytics');
+global.trackEvent = trackEvent;
 
 const path = require('path');
 const url = require('url');
@@ -24,13 +17,6 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 let mainWindow
 let updateWindow;
-require('electron-context-menu')({
-  prepend: (params) => [{
-    label: 'Rainbow',
-    // Only show it when right-clicking images
-    //visible: params.mediaType === 'image'
-  }]
-});
 log.info('App starting...');
 
 function createMainWindow() {
@@ -57,10 +43,10 @@ function createMainWindow() {
   const ses = mainWindow.webContents.session;
   log.info(ses.getUserAgent())
   mainWindow.on('closed', function () {
+    trackEvent('Application', 'Shutdown');
     ses.flushStorageData();
     mainWindow = null;
     // because we have more than one window, quit the app when the main one is shut
-    trackEvent('Application', 'Shutdown');
     app.quit();
   });
   windowState.manage(mainWindow);
@@ -160,14 +146,3 @@ app.on('activate', function () {
     createMainWindow();
   }
 });
-
-function trackEvent(category, action, label, value) {
-  usr
-    .event({
-      ec: category,
-      ea: action,
-      el: label,
-      ev: value,
-    })
-    .send();
-}

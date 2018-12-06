@@ -19,4 +19,11 @@ function trackEvent(category, action, label, value) {
       .send();
   }
 
+  function trackScreenView(screenName) {
+    var appVersion = require('electron').remote.app.getVersion();
+    usr
+      .screenview(screenName, "TronPlex", appVersion)
+      .send();
+  }
+
 module.exports = { trackEvent };

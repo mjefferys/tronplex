@@ -61,6 +61,9 @@
     </script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
+        const { getGlobal } = require('electron').remote;
+        const trackEvent = getGlobal('trackEvent');
+        const trackScreenView = getGlobal('trackScreenView');
         const log = require('electron-log');
         // Display the current version
         let version = window.location.hash.substring(1);
@@ -84,8 +87,10 @@
         function checkInstall() {
             var r = confirm("Update has been downloaded. Would you like to Install the update now? This will restart tronplex. If you cancel the update will apply on next start.");
             if (r == true) {
+                trackEvent("Application", "UpdaterInstant")
                 return true;
             } else {
+                trackEvent("Application", "UpdaterDeffered")
                 return false;
             }
         }

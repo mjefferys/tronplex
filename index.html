@@ -66,6 +66,8 @@
     const log = require('electron-log');
     const { getGlobal } = require('electron').remote;
     const trackEvent = getGlobal('trackEvent');
+    const trackScreenView = getGlobal('trackScreenView');
+    
     const electronTitlebarWindows = require('electron-titlebar-windows');
     const { remote } = require('electron');
     let titlebar = new electronTitlebarWindows({
@@ -121,6 +123,7 @@
     }
     function loadstop() {
         trackEvent("Application", "PlexLoadEnd");
+        trackScreenView("PlexApp");
     }
 
     function titleUpdate() {

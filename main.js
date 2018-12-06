@@ -5,6 +5,8 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const { trackEvent } = require('./analytics');
 global.trackEvent = trackEvent;
+const { trackScreenView } = require('./analytics');
+global.trackScreenView = trackScreenView;
 
 const path = require('path');
 const url = require('url');
@@ -18,6 +20,7 @@ autoUpdater.logger.transports.file.level = 'info';
 let mainWindow
 let updateWindow;
 log.info('App starting...');
+trackScreenView("MainApp");
 
 function createMainWindow() {
 
@@ -84,6 +87,7 @@ autoUpdater.on('checking-for-update', () => {
 })
 autoUpdater.on('update-available', (info) => {
   updateWindow.show();
+  trackScreenView("Updater")
   sendStatusToUpdateWindow('Update available. Downloading it!');
 })
 autoUpdater.on('update-not-available', (info) => {

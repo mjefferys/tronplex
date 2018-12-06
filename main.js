@@ -1,6 +1,5 @@
 const electron = require('electron');
 const { Menu, protocol, ipcMain } = require('electron');
-
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const { trackEvent } = require('./analytics');
@@ -46,10 +45,9 @@ function createMainWindow() {
   const ses = mainWindow.webContents.session;
   log.info(ses.getUserAgent())
   mainWindow.on('closed', function () {
-    trackEvent('Application', 'Shutdown');
     ses.flushStorageData();
     mainWindow = null;
-    // because we have more than one window, quit the app when the main one is shut
+    // because we have more than one window, quit the app when the main one is shut    
     app.quit();
   });
   windowState.manage(mainWindow);

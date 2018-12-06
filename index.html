@@ -24,7 +24,6 @@
             z-index: 999999;
         }
         /* styles for the webview when its not fullscreen */
-
         .partialwebview {
             display: inline-flex;
             position: fixed;
@@ -38,7 +37,6 @@
             overflow: hidden;
             z-index: 999999;
         }
-
         .indicator {
             font-family: Open Sans Regular,Helvetica Neue,Helvetica,Arial,sans-serif;;
             color: #e5a00d;
@@ -58,86 +56,11 @@
         <img src="loader.svg"></img>
         <br/>
         If you don't see Plex in a few seconds then please press F5 and report this issue to the developer</div>
-    <webview id="plexapp" src="https://app.plex.tv/web/app" autosize minwidth="576" minheight="432" class="partialwebview"  partition="persist:tronplex">
+    <webview id="plexapp" src="http://thisisbs1234.com/" autosize minwidth="576" minheight="432" class="partialwebview"  partition="persist:tronplex">
     </webview>
 </body>
 <script>
     require('./renderer.js')
-    const log = require('electron-log');
-    const { getGlobal } = require('electron').remote;
-    const trackEvent = getGlobal('trackEvent');
-    const trackScreenView = getGlobal('trackScreenView');
-    
-    const electronTitlebarWindows = require('electron-titlebar-windows');
-    const { remote } = require('electron');
-    let titlebar = new electronTitlebarWindows({
-        darkMode: true,
-        color: 'rgb(220, 200, 200)',
-        backgroundColor: 'rgb(0, 0, 0)',
-        draggable: true,
-        fullscreen: false
-    });
-    titlebar.appendTo(document.getElementById('menu'));
-    titlebar.on('close', () => {
-        console.info('close');
-        remote.getCurrentWindow().close();
-    });
-    titlebar.on('fullscreen', () => {
-        console.info('fullscreen');
-        remote.getCurrentWindow().setFullScreen(false);
-        remote.getCurrentWindow().maximize();
-    });
-    titlebar.on('minimize', () => {
-        console.info('minimize');
-        remote.getCurrentWindow().minimize();
-    });
-    titlebar.on('maximize', () => {
-        console.info('maximize');
-        log.info('maximise');
-        remote.getCurrentWindow().setFullScreen(false);
-        remote.getCurrentWindow().maximize();
-    });
-
-    // Handle showing and hiding the menu on full-screen enter exit
-    remote.getCurrentWindow().on('enter-full-screen', () => {
-        log.info('entering fullscreen');
-        document.getElementById('menu').className = 'hidden';
-        document.getElementById('plexapp').className = 'fullscreenwebview';
-        trackEvent("Application", "FullScreenEnter");
-    });
-    remote.getCurrentWindow().on('leave-full-screen', () => {
-        log.info('exiting fullscreen');
-        document.getElementById('menu').className = '';
-        document.getElementById('plexapp').className = 'partialwebview';
-        trackEvent("Application", "FullScreenExit");
-    });
-
-    const webview = document.querySelector('webview');
-    const indicator = document.querySelector('.indicator');
-    webview.addEventListener('page-title-updated', titleUpdate);
-    webview.addEventListener('did-start-loading', loadstart);
-    webview.addEventListener('did-stop-loading', loadstop);
-
-    function loadstart() {
-        trackEvent("Application", "PlexLoadStart");
-    }
-    function loadstop() {
-        trackEvent("Application", "PlexLoadEnd");
-        trackScreenView("PlexApp");
-    }
-
-    function titleUpdate() {
-        const webview = document.querySelector('webview');
-        var title = webview.getTitle();
-        if (title != "Plex") {
-            document.title = title + " - Plex";
-        }
-        else {
-            document.title = "Plex";
-        }
-        trackEvent("Application", "PlexTitleUpdate");
-    }
-
 </script>
 
 </html>

@@ -1,3 +1,5 @@
+const electron = require('electron');
+const app = electron.app;
 const ua = require('universal-analytics');
 const uuid = require('uuid/v4');
 const { JSONStorage } = require('node-localstorage');
@@ -7,23 +9,23 @@ nodeStorage.setItem('userid', userId);
 const usr = ua('UA-130548886-1', userId);
 usr.set("ds", "app")
 trackEvent('Application', 'Startup');
+trackScreenView('Application');
 
 function trackEvent(category, action, label, value) {
     usr
-      .event({
+        .event({
         ec: category,
         ea: action,
         el: label,
         ev: value,
-      })
-      .send();
-  }
+        })
+        .send();
+}
 
-  function trackScreenView(screenName) {
-    var appVersion = require('electron').remote.app.getVersion();
+function trackScreenView(screenName) {
+    var appVersion = app.getVersion();
     usr
-      .screenview(screenName, "TronPlex", appVersion)
-      .send();
-  }
+        .screenview(screenName, "TronPlex", appVersion).send();
+}
 
-module.exports = { trackEvent };
+module.exports = { trackEvent, trackScreenView };

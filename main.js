@@ -3,6 +3,16 @@ const { Menu, protocol, ipcMain } = require('electron');
 
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+const ua = require('universal-analytics');
+const uuid = require('uuid/v4');
+const { JSONStorage } = require('node-localstorage');
+const nodeStorage = new JSONStorage('./ls');
+const userId = nodeStorage.getItem('userid') || uuid();
+nodeStorage.setItem('userid', userId);
+const usr = ua('UA-130548886-1', userId);
+usr.set("ds", "app")
+trackEvent('Application', 'Startup');
+
 const path = require('path');
 const url = require('url');
 const autoUpdater = require("electron-updater").autoUpdater;
@@ -50,6 +60,7 @@ function createMainWindow() {
     ses.flushStorageData();
     mainWindow = null;
     // because we have more than one window, quit the app when the main one is shut
+    trackEvent('Application', 'Shutdown');
     app.quit();
   });
   windowState.manage(mainWindow);
@@ -149,3 +160,14 @@ app.on('activate', function () {
     createMainWindow();
   }
 });
+
+function trackEvent(category, action, label, value) {
+  usr
+    .event({
+      ec: category,
+      ea: action,
+      el: label,
+      ev: value,
+    })
+    .send();
+}

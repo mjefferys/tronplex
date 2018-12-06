@@ -37,12 +37,24 @@
             overflow: hidden;
             z-index: 999999;
         }
+
+        .indicator {
+            font-family: Open Sans Regular,Helvetica Neue,Helvetica,Arial,sans-serif;;
+            color: #e5a00d;
+            font-size: 35px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 90px;  
+        }
     </style>
     <title>Plex</title>
 </head>
 
 <body style="background: rgb(0, 0, 0); margin: 0; padding: 0;">
     <div id='menu'></div>
+    <div class="indicator">Loading Plex... 
+        <br/>
+        If you don't see Plex in 10 seconds then please press F5 and report this issue to the developer</div>
     <webview id="plexapp" src="https://app.plex.tv/web/app" autosize minwidth="576" minheight="432" class="partialwebview"  partition="persist:tronplex">
     </webview>
 </body>
@@ -92,7 +104,18 @@
     });
 
     const webview = document.querySelector('webview');
+    const indicator = document.querySelector('.indicator')
     webview.addEventListener('page-title-updated', titleUpdate)
+    webview.addEventListener('did-start-loading', loadstart)
+    webview.addEventListener('did-stop-loading', loadstop)
+
+    function loadstart() {
+
+    }
+    function loadstop() {
+      indicator.className = 'hidden';
+    }
+
     function titleUpdate() {
         const webview = document.querySelector('webview');
         var title = webview.getTitle();

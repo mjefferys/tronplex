@@ -4,6 +4,10 @@ const { remote } = require('electron');
 const { getGlobal } = remote;
 const trackEvent = getGlobal('trackEvent');
 const trackScreenView = getGlobal('trackScreenView');
+const fail = false;
+
+setInterval(trackActive, 60000);
+
 
 let titlebar = new electronTitlebarWindows({
     darkMode: true,
@@ -58,6 +62,7 @@ function loadfail(){
     trackEvent("Application", "PlexLoadFail");
     indicator.innerHTML = 'Plex Load Failed, please press F5 to try again';    
     trackScreenView("PlexFail");
+    fail = true;
 }
 function frameFinishLoad(){   
     trackEvent("Application", "PlexLoadFrame");
@@ -80,6 +85,11 @@ function titleUpdate() {
     }
     trackEvent("Application", "PlexTitleUpdate");
 }
+function trackActive(){
+    if(fail == false){
+        trackScreenView("PlexAppActive");
+    }
+}
 document.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
@@ -89,7 +99,7 @@ document.addEventListener("keydown", function (e) {
         location.reload();
     } else if (e.which === 112) {
         alert('Version: ' + appVersion + ' Electron version: ' + electrionVersion);   
-        trackEvent("Application", "PlexVersionCheck"); 
+        trackEvent("Application", "TronPlexVersionCheck"); 
     } else if (e.which == 113){
         changeSpeed(1)
     } else if (e.which == 114){

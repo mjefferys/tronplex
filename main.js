@@ -81,17 +81,21 @@ function sednDownloadProgressToUpdateWindow(percent) {
 }
 
 autoUpdater.on('checking-for-update', () => {
+  trackEvent("Application", "UpdateCheck");
   sendStatusToUpdateWindow('Checking for update...');
 })
 autoUpdater.on('update-available', (info) => {
   updateWindow.show();
   trackScreenView("Updater")
+  trackEvent("Application", "UpdateCheckRun");
   sendStatusToUpdateWindow('Update available. Downloading it!');
 })
 autoUpdater.on('update-not-available', (info) => {
+  trackEvent("Application", "UpdateCheckNone");
   sendStatusToUpdateWindow('Update not available.');
 })
 autoUpdater.on('error', (err) => {
+  trackEvent("Application", "UpdateCheckError");
   sendStatusToUpdateWindow('Error in auto-updater. Please restart Tronplex. If this continues submit a bug.');
 })
 autoUpdater.on('download-progress', (progressObj) => {

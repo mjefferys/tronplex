@@ -88,7 +88,8 @@ document.addEventListener("keydown", function (e) {
     } else if (e.which === 116) {
         location.reload();
     } else if (e.which === 112) {
-        alert('Version: ' + appVersion + ' Electron version: ' + electrionVersion);    
+        alert('Version: ' + appVersion + ' Electron version: ' + electrionVersion);   
+        trackEvent("Application", "PlexVersionCheck"); 
     } else if (e.which == 113){
         changeSpeed(1)
     } else if (e.which == 114){

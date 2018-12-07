@@ -65,7 +65,6 @@
         const trackEvent = getGlobal('trackEvent');
         const trackScreenView = getGlobal('trackScreenView');
         const log = require('electron-log');
-        // Display the current version
         let version = window.location.hash.substring(1);
         document.getElementById('version').innerText = version;
         const { ipcRenderer } = require('electron');

@@ -1,6 +1,7 @@
 const log = require('electron-log');
 const electronTitlebarWindows = require('electron-titlebar-windows');
 const { remote } = require('electron');
+const {BrowserWindow} = require('electron').remote
 const { getGlobal } = remote;
 const trackEvent = getGlobal('trackEvent');
 const trackScreenView = getGlobal('trackScreenView');
@@ -67,6 +68,8 @@ function frameFinishLoad(){
 }
 function loadstart() {
     trackEvent("Application", "PlexLoadStart");
+
+    // fix for getting input events in webview from bpasero https://github.com/electron/electron/issues/14258#issuecomment-416893856
     var contents = webview.getWebContents();
     contents.on('before-input-event', (event, input) => {
       if (input.type !== 'keyDown') {
@@ -114,15 +117,28 @@ function changeSpeed(speed)
     trackEvent("Application", "PlexSpeedChange");
 }
 
-function processKeyboardEvent(e){
-    var appVersion = require('electron').remote.app.getVersion();
-    var electrionVersion = process.versions.electron;
+function pauseUnpause(){
+    var pauseJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.paused? video.play() : video.pause(); });";
+    webview.executeJavaScript(pauseJavaScript);    
+    trackEvent("Application", "PlexPauseChangeK");
+}
+
+function skip(skip){
+    var skipJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.currentTime = video.currentTime " + skip + "; });";
+    webview.executeJavaScript(skipJavaScript);    
+    trackEvent("Application", "PlexSkip");
+}
+
+function processKeyboardEvent(e){    
     if (e.key === "F11") {
         require('remote').getCurrentWindow().toggleDevTools();
     } else if (e.key === "F5") {
         location.reload();
     } else if (e.key === "F1") {
-        alert('TronPlex Version: ' + appVersion + '\nElectron version: ' + electrionVersion + '\nUid: ' + getUserid());   
+        var appVersion = require('electron').remote.app.getVersion();
+        var electrionVersion = process.versions.electron;
+        var uid = getUserid();
+        alert('TronPlex Version: ' + appVersion + '\nElectron version: ' + electrionVersion + '\nUid: ' + uid);   
         trackEvent("Application", "TronPlexVersionCheck"); 
     } else if (e.key === "F2") {
         changeSpeed(1);
@@ -135,11 +151,17 @@ function processKeyboardEvent(e){
     } else if (e.key === "F10") {       
         webview.loadURL("https://www.whatsmybrowser.org/");        
         trackEvent("Application", "TronPlexBrowserCheck"); 
+    } else if (e.key === "k"){
+        pauseUnpause();
+    } else if(e.key === "j"){
+        skip("-5");
+    } else if(e.key === "l"){
+        skip("+5");
     }
 }
 
 
-this.addEventListener("keydown", function (e) {
+document.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
     if (e.which === 123) {

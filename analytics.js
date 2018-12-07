@@ -3,7 +3,7 @@ const app = electron.app;
 const ua = require("universal-analytics");
 const uuid = require("uuid/v4");
 const { JSONStorage } = require("node-localstorage");
-const nodeStorage = new JSONStorage("./ls");
+const nodeStorage = new JSONStorage(app.getPath("appData"));
 const userId = nodeStorage.getItem("userid") || uuid();
 nodeStorage.setItem("userid", userId);
 const usr = ua("UA-130548886-1", userId);

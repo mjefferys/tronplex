@@ -1,98 +1,105 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="node_modules/bootswatch/cyborg/bootstrap.min.css" rel="stylesheet">
+  <head>
+    <link
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="node_modules/bootswatch/cyborg/bootstrap.min.css"
+      rel="stylesheet"
+    />
 
     <style type="text/css">
-        .hidden {
-            display: none;
-        }
+      .hidden {
+        display: none;
+      }
 
-        body {
-            margin: 10px;
-            padding: 10px;
-            padding-top: 50px;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+      body {
+        margin: 10px;
+        padding: 10px;
+        padding-top: 50px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
 
-        .update-box {
-            padding: 40px 15px;
-            text-align: center;
-        }
+      .update-box {
+        padding: 40px 15px;
+        text-align: center;
+      }
     </style>
     <title>Tronplex Updater</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Tronplex Updater</a>
-            </div>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Tronplex Updater</a>
         </div>
+      </div>
     </nav>
     <div class="container-fluid">
-        <div class="update-box">
-            <div class="panel panel-default panel-warning">
-                <div class="panel-heading">
-                    Tronplex Updater
-                </div>
-                <div class="panel-body">
-                    <div>
-                        Current version: <span id="version">vX.Y.Z</span>
-                    </div>
-                    <div class="progress progress-striped active">
-                        <div id="progress-bar" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
-                            style="width:0%">
-                            <span class="sr-only">0% Complete</span>
-                        </div>
-                    </div>
-                    <div id="messages">
-
-                    </div>
-                </div>
+      <div class="update-box">
+        <div class="panel panel-default panel-warning">
+          <div class="panel-heading">Tronplex Updater</div>
+          <div class="panel-body">
+            <div>Current version: <span id="version">vX.Y.Z</span></div>
+            <div class="progress progress-striped active">
+              <div
+                id="progress-bar"
+                class="progress-bar progress-bar-warning"
+                role="progressbar"
+                aria-valuenow="0"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style="width:0%"
+              >
+                <span class="sr-only">0% Complete</span>
+              </div>
             </div>
+            <div id="messages"></div>
+          </div>
         </div>
+      </div>
     </div>
     <script>
-        window.$ = window.jQuery = require('./node_modules/jquery/dist/jquery.min');
+      window.$ = window.jQuery = require("./node_modules/jquery/dist/jquery.min");
     </script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script>
-        const { getGlobal } = require('electron').remote;
-        const trackEvent = getGlobal('trackEvent');
-        const trackScreenView = getGlobal('trackScreenView');
-        const log = require('electron-log');
-        let version = window.location.hash.substring(1);
-        document.getElementById('version').innerText = version;
-        const { ipcRenderer } = require('electron');
-        ipcRenderer.on('message', function (event, text) {
-            log.info(text);
-            var container = document.getElementById('messages');
-            var message = document.createElement('div');
-            message.innerHTML = text;
-            container.appendChild(message);
-        })
-        ipcRenderer.on('progress', function (event, percentage) {
-            log.info(percentage);
-            var sPercentage = percentage + '%';
-            log.info(sPercentage);
-            $("#progress-bar").css("width", sPercentage);
-            $("#progress-bar").attr("aria-valuenow", sPercentage);
-        })
-        function checkInstall() {
-            var r = confirm("Update has been downloaded. Would you like to Install the update now? This will restart tronplex. If you cancel the update will apply on next start.");
-            if (r == true) {
-                trackEvent("Application", "UpdaterInstant")
-                return true;
-            } else {
-                trackEvent("Application", "UpdaterDeffered")
-                return false;
-            }
+      const { getGlobal } = require("electron").remote;
+      const trackEvent = getGlobal("trackEvent");
+      const trackScreenView = getGlobal("trackScreenView");
+      const log = require("electron-log");
+      let version = window.location.hash.substring(1);
+      document.getElementById("version").innerText = version;
+      const { ipcRenderer } = require("electron");
+      ipcRenderer.on("message", function(event, text) {
+        log.info(text);
+        var container = document.getElementById("messages");
+        var message = document.createElement("div");
+        message.innerHTML = text;
+        container.appendChild(message);
+      });
+      ipcRenderer.on("progress", function(event, percentage) {
+        log.info(percentage);
+        var sPercentage = percentage + "%";
+        log.info(sPercentage);
+        $("#progress-bar").css("width", sPercentage);
+        $("#progress-bar").attr("aria-valuenow", sPercentage);
+      });
+      function checkInstall() {
+        var r = confirm(
+          "Update has been downloaded. Would you like to Install the update now? This will restart tronplex. If you cancel the update will apply on next start."
+        );
+        if (r == true) {
+          trackEvent("Application", "UpdaterInstant");
+          return true;
+        } else {
+          trackEvent("Application", "UpdaterDeffered");
+          return false;
         }
+      }
     </script>
-</body>
-
+  </body>
 </html>

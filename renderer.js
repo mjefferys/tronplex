@@ -7,6 +7,9 @@ const trackEvent = getGlobal('trackEvent');
 const trackScreenView = getGlobal('trackScreenView');
 const getUserid = getGlobal('getUserid');
 const fail = false;
+var failcount = 0;
+var trylocal = true;
+
 setInterval(trackActive, 60000);
 let titlebar = new electronTitlebarWindows({
     darkMode: true,
@@ -51,6 +54,8 @@ remote.getCurrentWindow().on('leave-full-screen', () => {
 
 const webview = document.querySelector('webview');
 const indicator = document.querySelector('.indicator');
+const errorMessage = document.querySelector('#errorMessage');
+
 webview.addEventListener('page-title-updated', titleUpdate);
 webview.addEventListener('did-start-loading', loadstart);
 webview.addEventListener('did-stop-loading', loadstop);
@@ -59,9 +64,27 @@ webview.addEventListener('did-fail-load', loadfail);
 
 function loadfail(){
     trackEvent("Application", "PlexLoadFail");
-    indicator.innerHTML = 'Plex load failed, retrying...';    
-    trackScreenView("PlexFail");
-    webview.loadURL("https://app.plex.tv/");
+    trackScreenView("PlexFail");    
+    if(failcount <= 9 )
+    {
+        if(trylocal == true)
+        {
+            errorMessage.innerHTML = 'Plex load failed, retrying local url...';    
+            webview.loadURL("http://127.0.0.1:32400/web/");    
+            trylocal = false;
+        }   
+        else
+        {
+            errorMessage.innerHTML = 'Local plex failed, retrying remote url...';    
+            webview.loadURL("https://app.plex.tv/");        
+            trylocal = true;
+        }
+        failcount++;
+    }
+    else
+    {
+        indicator.innerHTML = 'We tried ' +failcount+ ' times and could not load Plex, either you have no internet connection to app.plex.tv or no Plex server running locally. <br/> Please report this error to the developer.';    
+    }
 }
 function frameFinishLoad(){   
     trackEvent("Application", "PlexLoadFrame");

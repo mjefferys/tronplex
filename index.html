@@ -44,6 +44,9 @@
             text-align: center;
             vertical-align: middle;   
         }
+        .errorMessage {
+            font-size: 18px;
+        }
     </style>
     <title>Plex</title>
 </head>
@@ -55,7 +58,7 @@
         <br/>
         <img src="loader.svg"></img>
         <br/>
-        <span style = "font-size: 18px;">If you don't see Plex in a few seconds then please press F5 and report this issue to the developer</span>
+        <div id="errorMessage" class="errorMessage">If you don't see Plex in a few seconds, please wait for the retry, then report this issue to the developer</div>
     </div>
     <webview id="plexapp" src="https://app.plex.tv/" autosize minwidth="576" minheight="432" class="partialwebview" partition="persist:tronplex">
     </webview>

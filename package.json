@@ -17,7 +17,7 @@
   "author": "Michael Jefferys",
   "license": "MIT",
   "devDependencies": {
-    "electron": "2.0.14",
+    "electron": "2.0.13",
     "electron-builder": "20.34.0"
   },
   "dependencies": {

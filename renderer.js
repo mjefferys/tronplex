@@ -73,7 +73,6 @@ function loadstop() {
     trackScreenView("PlexApp");
 }
 function titleUpdate() {
-    const webview = document.querySelector('webview');
     var title = webview.getTitle();
     if (title != "Plex") {
         document.title = title + " - Plex";

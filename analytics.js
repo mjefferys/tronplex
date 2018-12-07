@@ -20,6 +20,7 @@ function trackEvent(category, action, label, value) {
         ev: value,
         })
         .send();
+        
 }
 
 function trackScreenView(screenName) {
@@ -28,4 +29,9 @@ function trackScreenView(screenName) {
         .screenview(screenName, "TronPlex", appVersion).send();
 }
 
-module.exports = { trackEvent, trackScreenView };
+function getUserid() {
+    return userId;
+}
+
+
+module.exports = { trackEvent, trackScreenView, getUserid };

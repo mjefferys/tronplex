@@ -4,11 +4,9 @@ const { remote } = require('electron');
 const { getGlobal } = remote;
 const trackEvent = getGlobal('trackEvent');
 const trackScreenView = getGlobal('trackScreenView');
+const getUserid = getGlobal('getUserid');
 const fail = false;
-
 setInterval(trackActive, 60000);
-
-
 let titlebar = new electronTitlebarWindows({
     darkMode: true,
     color: 'rgb(220, 200, 200)',
@@ -62,7 +60,7 @@ function loadfail(){
     trackEvent("Application", "PlexLoadFail");
     indicator.innerHTML = 'Plex load failed, retrying...';    
     trackScreenView("PlexFail");
-    webview.loadURL("https://app.plex.tv/")
+    webview.loadURL("https://app.plex.tv/");
 }
 function frameFinishLoad(){   
     trackEvent("Application", "PlexLoadFrame");
@@ -90,6 +88,17 @@ function trackActive(){
         trackScreenView("PlexAppActive");
     }
 }
+
+function changeSpeed(speed)
+{   
+    // changes the playback speed of the active window
+    console.log('Setting speed to: ' + speed);
+    var speedJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.playbackRate=" + speed + "; });";
+    webview.executeJavaScript(speedJavaScript);    
+    console.log('Speed to: ' + speed);
+    trackEvent("Application", "PlexSpeedChange");
+}
+
 document.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
@@ -98,28 +107,18 @@ document.addEventListener("keydown", function (e) {
     } else if (e.which === 116) {
         location.reload();
     } else if (e.which === 112) {
-        alert('Version: ' + appVersion + ' Electron version: ' + electrionVersion);   
+        alert('TronPlex Version: ' + appVersion + '\nElectron version: ' + electrionVersion + '\nUid: ' + getUserid());   
         trackEvent("Application", "TronPlexVersionCheck"); 
     } else if (e.which == 113){
-        changeSpeed(1)
+        changeSpeed(1);
     } else if (e.which == 114){
-        changeSpeed(1.25)  
+        changeSpeed(1.25);
     } else if (e.which == 115){
-        changeSpeed(1.5)
+        changeSpeed(1.5);
     } else if (e.which == 117){
-        changeSpeed(2)
-    } else if (e.which == 121){
-        const webview = document.querySelector('webview');           
+        changeSpeed(2);
+    } else if (e.which == 121){        
         webview.loadURL("https://www.whatsmybrowser.org/");        
+        trackEvent("Application", "TronPlexBrowserCheck"); 
     }
 });
-
-function changeSpeed(speed)
-{   
-    console.log('Setting speed to: ' + speed)
-    const webview = document.querySelector('webview');             
-    var speedJavaScript = "var videos = document.querySelectorAll('video'); videos.forEach(function(video) { video.playbackRate=" + speed + "; });"
-    webview.executeJavaScript(speedJavaScript);    
-    console.log('Speed to: ' + speed)
-    trackEvent("Application", "PlexSpeedChange");
-}

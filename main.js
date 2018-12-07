@@ -6,6 +6,8 @@ const { trackEvent } = require('./analytics');
 global.trackEvent = trackEvent;
 const { trackScreenView } = require('./analytics');
 global.trackScreenView = trackScreenView;
+const { getUserid } = require('./analytics');
+global.getUserid = getUserid;
 
 const path = require('path');
 const url = require('url');

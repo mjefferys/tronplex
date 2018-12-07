@@ -60,9 +60,9 @@ webview.addEventListener('did-fail-load', loadfail);
 
 function loadfail(){
     trackEvent("Application", "PlexLoadFail");
-    indicator.innerHTML = 'Plex Load Failed, please press F5 to try again';    
+    indicator.innerHTML = 'Plex load failed, retrying...';    
     trackScreenView("PlexFail");
-    fail = true;
+    webview.loadURL("https://app.plex.tv/")
 }
 function frameFinishLoad(){   
     trackEvent("Application", "PlexLoadFrame");

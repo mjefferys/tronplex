@@ -67,6 +67,22 @@ function frameFinishLoad(){
 }
 function loadstart() {
     trackEvent("Application", "PlexLoadStart");
+    var contents = webview.getWebContents();
+    contents.on('before-input-event', (event, input) => {
+      if (input.type !== 'keyDown') {
+        return;
+      }
+      const emulatedKeyboardEvent = new KeyboardEvent('keydown', {
+        code: input.code,
+        key: input.key,
+        shiftKey: input.shift,
+        altKey: input.alt,
+        ctrlKey: input.control,
+        metaKey: input.meta,
+        repeat: input.isAutoRepeat
+      });
+      processKeyboardEvent(emulatedKeyboardEvent);
+    });
 }
 function loadstop() {
     trackEvent("Application", "PlexLoadEnd");
@@ -98,7 +114,32 @@ function changeSpeed(speed)
     trackEvent("Application", "PlexSpeedChange");
 }
 
-document.addEventListener("keydown", function (e) {
+function processKeyboardEvent(e){
+    var appVersion = require('electron').remote.app.getVersion();
+    var electrionVersion = process.versions.electron;
+    if (e.key === "F11") {
+        require('remote').getCurrentWindow().toggleDevTools();
+    } else if (e.key === "F5") {
+        location.reload();
+    } else if (e.key === "F1") {
+        alert('TronPlex Version: ' + appVersion + '\nElectron version: ' + electrionVersion + '\nUid: ' + getUserid());   
+        trackEvent("Application", "TronPlexVersionCheck"); 
+    } else if (e.key === "F2") {
+        changeSpeed(1);
+    } else if (e.key === "F3") {
+        changeSpeed(1.25);
+    } else if (e.key === "F4") {
+        changeSpeed(1.5);
+    } else if (e.key === "F6") {
+        changeSpeed(2);
+    } else if (e.key === "F10") {       
+        webview.loadURL("https://www.whatsmybrowser.org/");        
+        trackEvent("Application", "TronPlexBrowserCheck"); 
+    }
+}
+
+
+this.addEventListener("keydown", function (e) {
     var appVersion = require('electron').remote.app.getVersion();
     var electrionVersion = process.versions.electron;
     if (e.which === 123) {

@@ -52,6 +52,8 @@ function createMainWindow() {
     // because we have more than one window, quit the app when the main one is shut    
     app.quit();
   });
+  
+  // fix for getting input events in webview from bpasero https://github.com/electron/electron/issues/14258#issuecomment-416893856
   windowState.manage(mainWindow);
   return mainWindow;
 }
@@ -136,7 +138,8 @@ app.on('ready', function () {
   createUpdateWindow();  
   updateWindow.webContents.on('did-finish-load', () => {
     autoUpdater.checkForUpdates();
-  })  
+  });
+  //mainWindow.toggleDevTools();
 });
 
 app.on('window-all-closed', function () {
@@ -156,3 +159,4 @@ app.on('activate', function () {
     createMainWindow();
   }
 });
+

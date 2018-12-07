@@ -133,8 +133,10 @@ autoUpdater.on('update-downloaded', (info) => {
 
 app.on('ready', function () {
   createMainWindow();
-  createUpdateWindow();
-  autoUpdater.checkForUpdates();
+  createUpdateWindow();  
+  updateWindow.webContents.on('did-finish-load', () => {
+    autoUpdater.checkForUpdates();
+  })  
 });
 
 app.on('window-all-closed', function () {

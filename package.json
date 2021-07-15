@@ -1,5 +1,5 @@
 {
-  "name": "Tronplex",
+  "name": "tronplex",
   "version": "1.0.0",
   "description": "A electron based plexweb client for Windows 10",
   "main": "main.js",

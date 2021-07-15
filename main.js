@@ -32,7 +32,7 @@ app.on("ready", function() {
   updateWindow.webContents.on("did-finish-load", () => {
     autoUpdater.checkForUpdates();
   });
-  updateWindow.show();
+  //updateWindow.show();
   //mainWindow.toggleDevTools();
 });
 

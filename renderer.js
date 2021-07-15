@@ -6,9 +6,13 @@ const { getGlobal } = remote;
 const trackEvent = getGlobal("trackEvent");
 const trackScreenView = getGlobal("trackScreenView");
 const getUserid = getGlobal("getUserid");
+
+
 const fail = false;
 var failcount = 0;
 var trylocal = true;
+
+
 
 setInterval(trackActive, 60000);
 let titlebar = new electronTitlebarWindows({
@@ -90,10 +94,11 @@ function loadstart() {
   trackEvent("Application", "PlexLoadStart");
 
   // fix for getting input events in webview from bpasero https://github.com/electron/electron/issues/14258#issuecomment-416893856
-  var contents = webview.getWebContents();
+  //var contents = webview.getWebContents();
+  contents = remote.webContents.fromId(webview.getWebContentsId())
   contents.on("before-input-event", (event, input) => {
     if (input.type !== "keyDown") {
-      return;
+      return;      
     }
     const emulatedKeyboardEvent = new KeyboardEvent("keydown", {
       code: input.code,

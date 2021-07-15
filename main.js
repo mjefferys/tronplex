@@ -9,6 +9,7 @@ global.trackScreenView = trackScreenView;
 const { getUserid } = require("./analytics");
 global.getUserid = getUserid;
 
+
 const path = require("path");
 const url = require("url");
 const autoUpdater = require("electron-updater").autoUpdater;
@@ -23,12 +24,15 @@ let updateWindow;
 log.info("App starting...");
 trackScreenView("MainApp");
 
+
+
 app.on("ready", function() {
   createMainWindow();
   createUpdateWindow();
   updateWindow.webContents.on("did-finish-load", () => {
     autoUpdater.checkForUpdates();
   });
+  updateWindow.show();
   //mainWindow.toggleDevTools();
 });
 
@@ -63,7 +67,13 @@ function createMainWindow() {
     y: windowState.y,
     width: windowState.width,
     height: windowState.height,
-    icon: path.join(__dirname, "icon.png")
+    icon: path.join(__dirname, "icon.png"),
+    webPreferences: {
+      webviewTag: true,   
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true
+  }
   });
   mainWindow.loadURL(
     url.format({
@@ -87,7 +97,13 @@ function createMainWindow() {
 function createUpdateWindow() {
   updateWindow = new BrowserWindow({
     show: false,
-    icon: path.join(__dirname, "icon.png")
+    icon: path.join(__dirname, "icon.png"),
+    webPreferences: {
+      webviewTag: true,   
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true
+  }
   });
   updateWindow.on("close", e => {
     e.preventDefault();

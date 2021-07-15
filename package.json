@@ -17,18 +17,20 @@
   "author": "Michael Jefferys",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^3.1.13",
+    "electron": "^13.1.6",
     "electron-builder": "^20.44.4"
   },
   "dependencies": {
     "bootstrap": "^3.4.1",
     "bootswatch": "^3.4.1",
     "electron-context-menu": "^0.10.1",
+    "electron-localshortcut": "^3.2.1",
     "electron-log": "^2.2.17",
     "electron-titlebar-windows": "^3.0.0",
     "electron-updater": "^4.4.1",
     "electron-window-state": "^5.0.3",
     "jquery": "^3.6.0",
+    "mousetrap": "^1.6.5",
     "node-localstorage": "^1.3.1",
     "universal-analytics": "^0.4.23",
     "uuid": "^3.4.0"
